@@ -5,23 +5,6 @@
 })('ChordParserRender', this, function () {
     'use strict';
 
-    var extend = function () {
-        var args = [].slice.call(arguments);
-        var src = args.shift();
-        var obj, key;
-
-        /* jshint boss:true */
-        while (obj = args.shift()) {
-            for (key in obj) {
-                if (obj.hasOwnProperty(key)) {
-                    src[key] = obj[key];
-                }
-            }
-        }
-
-        return src;
-    };
-
     /**
      * @constructor
      * @param {string} input - string that contains chords
@@ -35,7 +18,6 @@
         }
 
         this.input = input;
-        this.defaults = {ignorecase: false};
     }
 
     /**
@@ -48,7 +30,7 @@
         var regex = /\[(\b[A-G](?:(?:add|dim|aug|maj|mM|mMaj|sus|m|b|#|\d)?(?:\/[A-G0-9])?)*(?!\||—|-|\.|:)(?:\b|#)+)]/g;
 
         return this.input.replace(regex, function (chord) {
-            return fn(chord.replace(/\[(.+)]/, "$1"));
+            return fn(removeBraces(chord));
         });
     };
 
@@ -66,7 +48,7 @@
         }
 
         var matchesNormal = matches.map(function (match) {
-            return match.replace(/\[(.+)]/, "$1");
+            return removeBraces(match);
         });
 
         return matchesNormal.sort(function (a, b) {
@@ -84,6 +66,10 @@
         return this.all().filter(function (chord, index, arr) {
             return arr.indexOf(chord) === index;
         });
+    };
+
+    var removeBraces = function (chord) {
+        return chord.replace(/\[(.+)]/, "$1");
     };
 
     return ChordParser;
