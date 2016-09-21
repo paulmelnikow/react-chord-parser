@@ -1,16 +1,17 @@
 {
-  "name": "chord-parser",
+  "name": "chord-parser-render",
   "version": "0.1.1",
-  "description": "Parse guitar chords contained within a string of tablature",
+  "description": "Parse and render guitar chords contained within a string of tablature",
   "author": "Eric Hynds <ehynds@gmail.com>",
+  "contributors": ["Kyrylo Zapylaiev <zak@robotnec.com"],
   "main": "index.js",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ehynds/chord-parser"
+    "url": "https://github.com/kyryloz/chord-parser-render"
   },
   "bugs": {
-    "url": "https://github.com/ehynds/chord-parser/issues"
+    "url": "https://github.com/kyryloz/chord-parser-render/issues"
   },
   "keywords": [
     "guitar",
@@ -18,7 +19,8 @@
     "guitar chords",
     "tablature",
     "chords",
-    "parser"
+    "parser",
+    "render guitar chord"
   ],
   "scripts": {
     "test": "grunt test"
