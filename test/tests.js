@@ -23,6 +23,11 @@ describe('The parser', function () {
         var result = new ChordParser('A big bottle of wine').all();
         expect(result).to.empty();
     });
+
+    it('should not match a chord if it is not wrapped into []', function() {
+        var result = new ChordParser('C [D] Am [Cm]').all();
+        expect(result.join('')).to.equal('CmD');
+    });
 });
 
 describe('The unique() method', function () {
@@ -34,22 +39,22 @@ describe('The unique() method', function () {
     });
 
     it('should sort results alphabetically', function () {
-        var result = new ChordParser('C B A').unique();
+        var result = new ChordParser('[C] [B] [A]').unique();
         expect(result.join('')).to.equal('ABC');
     });
 
     it('should not contain duplicates', function () {
-        var result = new ChordParser('A A B C A D E F E').unique();
+        var result = new ChordParser('[A] [A] [B] [C] [A] [D] [E] [F] [E]').unique();
         expect(result.join('')).to.equal('ABCDEF');
     });
 
     it('should be case sensitive by default', function () {
-        var result = new ChordParser('A a B b C c').unique();
+        var result = new ChordParser('[A] [a] [B] [b] [C] [c]').unique();
         expect(result.join('')).to.equal('ABC');
     });
 
     it('should be case insensitive when the ignorecase option is set', function () {
-        var result = new ChordParser('A a B b C c').unique({ignorecase: true});
+        var result = new ChordParser('[A] [a] [B] [b] [C] [c]').unique({ignorecase: true});
         expect(result.join('')).to.equal('AaBbCc');
     });
 });
@@ -60,17 +65,17 @@ describe('The wrap() method', function () {
     };
 
     it('should replace chords with the result of my callback', function () {
-        var result = new ChordParser('A B C').wrap(wrapper);
+        var result = new ChordParser('[A] [B] [C]').wrap(wrapper);
         expect(result).to.equal('<span>A</span> <span>B</span> <span>C</span>');
     });
 
     it('should be case sensitive by default', function () {
-        var result = new ChordParser('A b C').wrap(wrapper);
+        var result = new ChordParser('[A] [b] [C]').wrap(wrapper);
         expect(result).to.equal('<span>A</span> b <span>C</span>');
     });
 
     it('should be case insensitive when the ignorecase option is set', function () {
-        var result = new ChordParser('A b C').wrap(wrapper, {ignorecase: true});
+        var result = new ChordParser('[A] [b] [C]').wrap(wrapper, {ignorecase: true});
         expect(result).to.equal('<span>A</span> <span>b</span> <span>C</span>');
     });
 });
