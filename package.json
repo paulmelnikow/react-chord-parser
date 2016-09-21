@@ -1,6 +1,6 @@
 {
   "name": "chord-parser-render",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Parse and render guitar chords contained within a string of tablature",
   "author": "Eric Hynds <ehynds@gmail.com>",
   "contributors": ["Kyrylo Zapylaiev <zak@robotnec.com"],
