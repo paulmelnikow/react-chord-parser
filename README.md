@@ -1,4 +1,4 @@
-# chord-parser
+# chord-parser-render
 
 Utility for parsing guitar chords contained within a string of tablature. The
 most common use case is to wrap all chords found within a song in an anchor tag
