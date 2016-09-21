@@ -7,10 +7,10 @@ so that their finger chart can be presented in a tooltip.
 ### Install
 
 ```bash
-npm install chord-parser
+npm install chord-parser-render
 ```
 
-or if using on the web, grab the `dist/chord-parser.min.js` file.
+or if using on the web, grab the `dist/chord-parser-render.min.js` file.
 
 ### Usage
 
@@ -25,7 +25,7 @@ A|--------------------------------------|----------3---------------2--------| \
 E|--------------------------------------|-----------------------------------| ';
 
 // Import chord-parser
-var ChordParser = require('chord-parser');
+var ChordParser = require('chord-parser-render');
 
 // Create a new ChordParser object with the input string
 var tabs = new ChordParser(input);
