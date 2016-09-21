@@ -52,11 +52,6 @@ describe('The unique() method', function () {
         var result = new ChordParser('[A] [a] [B] [b] [C] [c]').unique();
         expect(result.join('')).to.equal('ABC');
     });
-
-    it('should be case insensitive when the ignorecase option is set', function () {
-        var result = new ChordParser('[A] [a] [B] [b] [C] [c]').unique({ignorecase: true});
-        expect(result.join('')).to.equal('AaBbCc');
-    });
 });
 
 describe('The wrap() method', function () {
@@ -71,11 +66,6 @@ describe('The wrap() method', function () {
 
     it('should be case sensitive by default', function () {
         var result = new ChordParser('[A] [b] [C]').wrap(wrapper);
-        expect(result).to.equal('<span>A</span> b <span>C</span>');
-    });
-
-    it('should be case insensitive when the ignorecase option is set', function () {
-        var result = new ChordParser('[A] [b] [C]').wrap(wrapper, {ignorecase: true});
-        expect(result).to.equal('<span>A</span> <span>b</span> <span>C</span>');
+        expect(result).to.equal('<span>A</span> [b] <span>C</span>');
     });
 });
