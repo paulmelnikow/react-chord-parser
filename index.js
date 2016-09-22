@@ -18,6 +18,7 @@
         }
 
         this.input = input;
+        this.regex = /\[(\b[A-G](?:(?:add|dim|aug|maj|mM|mMaj|sus|m|b|#|\d)?(?:\/[A-G0-9])?)*(?!\||—|-|\.|:)(?:\b|#)+)]/g;
     }
 
     /**
@@ -27,9 +28,7 @@
      * @returns {string} updated string with the tabs transposed.
      */
     ChordParser.prototype.wrap = function (fn) {
-        var regex = /\[(\b[A-G](?:(?:add|dim|aug|maj|mM|mMaj|sus|m|b|#|\d)?(?:\/[A-G0-9])?)*(?!\||—|-|\.|:)(?:\b|#)+)]/g;
-
-        return this.input.replace(regex, function (chord) {
+        return this.input.replace(this.regex, function (chord) {
             return fn(removeBraces(chord));
         });
     };
@@ -39,9 +38,7 @@
      * @returns {Array} array of chords found in the string
      */
     ChordParser.prototype.all = function () {
-        var regex = /\[(\b[A-G](?:(?:add|dim|aug|maj|mM|mMaj|sus|m|b|#|\d)?(?:\/[A-G0-9])?)*(?!\||—|-|\.|:)(?:\b|#)+)]/g;
-
-        var matches = this.input.match(regex);
+        var matches = this.input.match(this.regex);
 
         if (!matches) {
             return [];
