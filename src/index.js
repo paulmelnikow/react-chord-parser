@@ -1,6 +1,7 @@
-import React from 'react';
+import React from "react";
+import RaphaelChord from "../etc/raphael.chord";
 
-class Chord extends React.Component {
+export default class Chordify extends React.Component {
 
     constructor(props) {
         super(props);
@@ -9,63 +10,45 @@ class Chord extends React.Component {
         this.input = props.input;
     }
 
-    /**
-     * Replace each chord in the tab with a string of your own choosing.
-     * This is most commonly used to wrap a chord in an anchor tag.
-     * @returns {string} updated string with the tabs transposed.
-     */
-    wrap() {
-        return this.input.replace(this.regex, function (chord) {
-            return <a>{this.removeBraces(chord)}</a>;
-        });
+    componentDidMount() {
+
     }
 
-    /**
-     * Retrieve an array of all chords found in the string, sorted alphabetically
-     * @returns {Array} array of chords found in the string
-     */
-    all() {
-        var matches = this.input.match(this.regex);
+    wrap = () => {
+        return this.input.replace(this.regex, chord => <a>{this.removeBraces(chord)}</a>);
+    };
+
+    all = () => {
+        const matches = this.input.match(this.regex);
 
         if (!matches) {
             return [];
         }
 
-        var matchesNormal = matches.map(function (match) {
-            return removeBraces(match);
-        });
+        const matchesNormal = matches.map(match => this.removeBraces(match));
 
-        return matchesNormal.sort(function (a, b) {
+        return matchesNormal.sort((a, b) => {
             a = a.toLowerCase();
             b = b.toLowerCase();
             return a > b ? 1 : a < b ? -1 : 0;
         });
     };
 
-    /**
-     * Retrieve an array of unique chords found in the string, sorted alphabetically
-     * @returns {Array} array of unique chords found in the string, alpha sorted.
-     */
-    unique() {
-        return this.all().filter(function (chord, index, arr) {
-            return arr.indexOf(chord) === index;
-        });
+    unique = () => {
+        return this.all().filter((chord, index, arr) => arr.indexOf(chord) === index);
     };
 
-    renderUnique(parent, supplier) {
+    renderUnique() {
         var unique = this.unique();
 
-        unique.forEach(function (chord) {
-            var element = document.createElement("div");
-            element.id = "id" + chord;
-            parent.appendChild(element);
-            Raphael.chord(element.id, supplier(chord));
+        unique.forEach(chord => {
+            const className = "id" + chord;
+            RaphaelChord.chord(className, chord);
+            return <div className={className}></div>
         });
     };
 
-    removeBraces(chord) {
-        return chord.replace(/\[(.+)]/, "$1");
-    };
+    removeBraces = chord => chord.replace(/\[(.+)]/, "$1");
 
     render() {
         return (
@@ -73,5 +56,3 @@ class Chord extends React.Component {
         )
     }
 }
-
-export default MyComponent;
