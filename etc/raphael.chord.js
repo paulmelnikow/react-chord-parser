@@ -5,6 +5,8 @@
  * Licensed under the MIT (http://www.opensource.org/licenses/mit-license.php) license.
  */
 
+import Raphael from "node-raphael";
+
 module.exports = (function(Raphael) {
 
   Raphael.chord = function(elementOrPosition, data, labelOrVariant) {
@@ -2724,4 +2726,4 @@ module.exports = (function(Raphael) {
     this.element.remove();
   };
 
-})(window.Raphael);
+})(Raphael);

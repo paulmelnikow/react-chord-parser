@@ -39,7 +39,7 @@ describe('Full DOM Rendering', () => {
 
     it('calls componentDidMount', () => {
         sinon.spy(Chordify.prototype, 'componentDidMount');
-        const wrapper = mount(<Chordify />);
+        mount(<Chordify input='[Am]'/>);
         expect(Chordify.prototype.componentDidMount.calledOnce).to.be.true;
         Chordify.prototype.componentDidMount.restore();
     });
