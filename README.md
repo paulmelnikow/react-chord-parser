@@ -47,6 +47,7 @@ class MyComponent extends React.Component {
         }
     };
     
+    // this will render all unique chords from the input as vector image
     renderUniqueChords() {
         return uniques.map(chord => <Chord key={chord} name={chord} diagram={this.diagramSupplier(chord)}/>);
     }
