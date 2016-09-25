@@ -85,7 +85,7 @@
 
             var _this = _possibleConstructorReturn(this, (Chordify.__proto__ || Object.getPrototypeOf(Chordify)).call(this, props));
 
-            _this.parser = new _Parser2.default(props.input, props.color || "#2e6da4");
+            _this.parser = new _Parser2.default(props.input, props.color);
             return _this;
         }
 

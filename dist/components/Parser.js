@@ -50,7 +50,7 @@
             };
 
             this.input = input;
-            this.color = color;
+            this.color = color || "#2e6da4";
             this.regex = /\[(\b[A-G](?:(?:add|dim|aug|maj|mM|mMaj|sus|m|b|#|\d)?(?:\/[A-G0-9])?)*(?!\||—|-|\.|:)(?:\b|#)+)]/g;
         }
 
