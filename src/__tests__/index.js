@@ -1,35 +1,11 @@
 import React from 'react';
 
-import {shallow, mount, render} from 'enzyme';
+import {mount, render} from 'enzyme';
 import {expect} from 'chai';
 import sinon from 'sinon';
 
 import Chordify from '../index';
 
-// Demo tests
-
-// Shallow Rendering
-// https://github.com/airbnb/enzyme/blob/master/docs/api/shallow.md
-// describe('Shallow Rendering', () => {
-//
-//     it('to have three `.icon-test`s', () => {
-//         const wrapper = shallow(<Chordify />);
-//         expect(wrapper.find('.icon-test')).to.have.length(3);
-//     });
-//
-//     it('simulates click events', () => {
-//         const buttonClick = sinon.spy();
-//         const wrapper = shallow(
-//           <Chordify handleClick={buttonClick} />
-//         );
-//         wrapper.find('button').simulate('click');
-//         expect(buttonClick.calledOnce).to.equal(true);
-//     });
-//
-// });
-
-// Full DOM Rendering
-// https://github.com/airbnb/enzyme/blob/master/docs/api/mount.md
 describe('Full DOM Rendering', () => {
 
     it('allows us to set props', () => {
@@ -46,13 +22,26 @@ describe('Full DOM Rendering', () => {
 
 });
 
-// Static Rendered Markup
-// https://github.com/airbnb/enzyme/blob/master/docs/api/render.md
-// describe('Static Rendered Markup', () => {
-//
-//     it('renders three `.icon-test`s', () => {
-//         const wrapper = render(<MyComponent />);
-//         expect(wrapper.find('.icon-test').length).to.equal(3);
-//     });
-//
-// });
+describe('Static Rendered Markup', () => {
+
+    it('should renders the input with chord w/o brackets', () => {
+        const wrapper = render(<Chordify input='Hello [Am]'/>);
+        expect(wrapper.text()).to.equals('Hello Am');
+    });
+
+    it('should renders the input as is if chord in brackets is invalid', () => {
+        const wrapper = render(<Chordify input='Hello [H7]'/>);
+        expect(wrapper.text()).to.equals('Hello [H7]');
+    });
+
+});
+
+describe('Parsing and render unique chords', () => {
+
+    it('should render only unique chords', () => {
+        const wrapper = render(<Chordify showUniqueChordsOnly={true} input='Hello [Am] [C] [Am]'/>);
+        expect(wrapper.find(".id-Am").text()).to.equals('Am');
+        expect(wrapper.find(".id-C").text()).to.equals('C');
+    });
+
+});

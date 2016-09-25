@@ -17,11 +17,11 @@
         value: true
     });
     exports.default = Chord;
-    // chord.js v1.0.0 | MIT | Einar Egilsson 2015 | http://einaregilsson.com
-
     function Chord(canvas, name, positions, fingering) {
         this.init(canvas, name, positions, fingering);
     }
+
+    // chord.js v1.0.0 | MIT | Einar Egilsson 2015 | http://einaregilsson.com
 
     //Defaults
 

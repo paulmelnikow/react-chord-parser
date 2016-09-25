@@ -85,6 +85,10 @@
 
             var _this = _possibleConstructorReturn(this, (Chordify.__proto__ || Object.getPrototypeOf(Chordify)).call(this, props));
 
+            _this.removeBraces = function (chord) {
+                return chord.replace(/\[(.+)]/, "$1");
+            };
+
             _this.wrap = function () {
                 var wrapped = _this.input.replace(_this.regex, function (chord) {
                     return "<a>" + _this.removeBraces(chord) + "</a>";
@@ -116,12 +120,9 @@
                 });
             };
 
-            _this.removeBraces = function (chord) {
-                return chord.replace(/\[(.+)]/, "$1");
-            };
-
             _this.regex = /\[(\b[A-G](?:(?:add|dim|aug|maj|mM|mMaj|sus|m|b|#|\d)?(?:\/[A-G0-9])?)*(?!\||—|-|\.|:)(?:\b|#)+)]/g;
             _this.input = props.input;
+            _this.renderUniqueChords = props.renderUniqueChords || false;
             return _this;
         }
 
@@ -129,25 +130,40 @@
             key: "componentDidMount",
             value: function componentDidMount() {}
         }, {
-            key: "renderUnique",
-            value: function renderUnique() {
+            key: "renderUniqueChords",
+            value: function renderUniqueChords() {
                 var unique = this.unique();
 
-                unique.forEach(function (chord) {
+                var nodes = unique.map(function (chord) {
                     var className = "id" + chord;
-                    var chordjs = (0, _chord2.default)(null, null, null, null);
+                    // const chordjs = ChordJs(null, null, null, null);
                     // ChordJs.chord(className, chord);
                     return _react2.default.createElement("div", { className: className });
                 });
+
+                return _react2.default.createElement(
+                    "div",
+                    null,
+                    nodes
+                );
             }
         }, {
-            key: "render",
-            value: function render() {
+            key: "renderInput",
+            value: function renderInput() {
                 return _react2.default.createElement(
                     "div",
                     null,
                     this.wrap()
                 );
+            }
+        }, {
+            key: "render",
+            value: function render() {
+                if (this.renderUniqueChords) {
+                    return this.renderUniqueChords();
+                } else {
+                    return this.renderInput();
+                }
             }
         }]);
 
