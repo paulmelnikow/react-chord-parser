@@ -1,6 +1,6 @@
 import React from "react";
 import Highlight from "./components/Highlight";
-import Chord from "./chordjs/chord";
+import Chord from "./components/Chord";
 
 export default class Chordify extends React.Component {
 
@@ -47,11 +47,11 @@ export default class Chordify extends React.Component {
         return this.all().filter((chord, index, arr) => arr.indexOf(chord) === index);
     };
 
-    renderUniqueChords() {
+    renderUniqueChords(diagramSupplier) {
         var unique = this.unique();
 
         const nodes = unique.map(chord => {
-            return <Chord id={chord} name={chord} />;
+            return <Chord key={chord} name={chord} diagram={diagramSupplier(chord)} />;
         });
 
         return (
@@ -67,7 +67,10 @@ export default class Chordify extends React.Component {
 
     render() {
         if (this.showUniqueChordsOnly) {
-            return this.renderUniqueChords();
+            if (typeof this.props.diagramSupplier == "undefined") {
+                throw new Error("Must supply diagramSupplier callback");
+            }
+            return this.renderUniqueChords(this.props.diagramSupplier);
         } else {
             return this.renderInput();
         }

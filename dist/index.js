@@ -1,16 +1,16 @@
 (function (global, factory) {
     if (typeof define === "function" && define.amd) {
-        define(["exports", "react", "./components/Highlight", "./chordjs/chord"], factory);
+        define(["exports", "react", "./components/Highlight", "./components/Chord"], factory);
     } else if (typeof exports !== "undefined") {
-        factory(exports, require("react"), require("./components/Highlight"), require("./chordjs/chord"));
+        factory(exports, require("react"), require("./components/Highlight"), require("./components/Chord"));
     } else {
         var mod = {
             exports: {}
         };
-        factory(mod.exports, global.react, global.Highlight, global.chord);
+        factory(mod.exports, global.react, global.Highlight, global.Chord);
         global.index = mod.exports;
     }
-})(this, function (exports, _react, _Highlight, _chord) {
+})(this, function (exports, _react, _Highlight, _Chord) {
     "use strict";
 
     Object.defineProperty(exports, "__esModule", {
@@ -21,7 +21,7 @@
 
     var _Highlight2 = _interopRequireDefault(_Highlight);
 
-    var _chord2 = _interopRequireDefault(_chord);
+    var _Chord2 = _interopRequireDefault(_Chord);
 
     function _interopRequireDefault(obj) {
         return obj && obj.__esModule ? obj : {
@@ -134,11 +134,11 @@
             value: function componentDidMount() {}
         }, {
             key: "renderUniqueChords",
-            value: function renderUniqueChords() {
+            value: function renderUniqueChords(diagramSupplier) {
                 var unique = this.unique();
 
                 var nodes = unique.map(function (chord) {
-                    return _react2.default.createElement(_chord2.default, { id: chord, name: chord });
+                    return _react2.default.createElement(_Chord2.default, { id: chord, name: chord, diagram: diagramSupplier(chord) });
                 });
 
                 return _react2.default.createElement(
@@ -160,7 +160,10 @@
             key: "render",
             value: function render() {
                 if (this.showUniqueChordsOnly) {
-                    return this.renderUniqueChords();
+                    if (this.props.diagramSupplier === "undefined") {
+                        throw new Error("Must supply diagramSupplier callback");
+                    }
+                    return this.renderUniqueChords(this.props.diagramSupplier);
                 } else {
                     return this.renderInput();
                 }

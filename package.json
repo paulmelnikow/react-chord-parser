@@ -1,6 +1,6 @@
 {
   "name": "react-chord-parser",
-  "version": "0.2.1",
+  "version": "0.2.0",
   "description": "Parse and render guitar chords contained within a string",
   "author": "Kyrylo Zapylaiev <zak@robotnec.com",
   "contributors": [

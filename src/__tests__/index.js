@@ -20,6 +20,18 @@ describe('Full DOM Rendering', () => {
         Chordify.prototype.componentDidMount.restore();
     });
 
+    // it('calls componentDidMount if show unique only', () => {
+    //     const diagramSupplierFn = (chord) => {
+    //         console.log("supply for", chord);
+    //         return "[0, 0, 1, 1, 1, 0]"
+    //     };
+    //
+    //     sinon.spy(Chordify.prototype, 'componentDidMount');
+    //     mount(<Chordify diagramSupplier={diagramSupplierFn} showUniqueChordsOnly={true} input='[Am]'/>);
+    //     expect(Chordify.prototype.componentDidMount.calledOnce).to.be.true;
+    //     Chordify.prototype.componentDidMount.restore();
+    // });
+
 });
 
 describe('Static Rendered Markup', () => {

@@ -19,7 +19,7 @@ const sizes = {
     fretFontSize: [6, 8, 10, 12, 14, 14, 16, 17, 18, 19]
 };
 
-export default class ChordComponent extends React.Component {
+export default class Chord extends React.Component {
 
     constructor(props) {
         super(props);
@@ -65,7 +65,6 @@ export default class ChordComponent extends React.Component {
                 c.moveTo(x1, y1);
                 c.lineTo(x2, y2);
                 c.stroke();
-                //console.log('x1 ' + x1 + ', x2 ' + x2 + ' y1 ' + y1 + ' y2 ' + y2 + ' width: ' +width);
                 c.restore();
             },
 
@@ -91,20 +90,14 @@ export default class ChordComponent extends React.Component {
                     c.stroke();
                 }
             },
-
-            diagram: function () {
-                var img = document.createElement('img');
-                img.src = this.canvas.toDataURL();
-                return img;
-            }
         };
 
         this.renderChord = function () {
-
             const chordName = this.props.name;
 
-            this.initDraw(chordName, "[0, 0, 1, 1, 1]", "");
-            this.getDiagram(5);
+            this.initDraw(chordName, this.props.diagram, "");
+            this.renderer = this.renderers.canvas; //Could potentially put in different renderers here, SVG, url etc.
+            this.draw(4);
         };
     }
 
@@ -137,7 +130,7 @@ export default class ChordComponent extends React.Component {
         for (var i in raw) {
             var c = raw[i];
             if (c.toLowerCase() == 'x') {
-                this.positions.push(ChordComponent.MUTED);
+                this.positions.push(Chord.MUTED);
             } else {
                 var fret = parseInt(c);
                 if (fret > 0 && fret < minFret) {
@@ -179,7 +172,7 @@ export default class ChordComponent extends React.Component {
             if (this.startFret > 1) {
                 y += info.nutSize;
             }
-            if (pos == ChordComponent.MUTED) {
+            if (pos == Chord.MUTED) {
                 this.drawCross(info, x, y, info.muteStringRadius, info.muteStringLineWidth);
             } else if (pos == 0) {
                 r.circle(x, y, info.openStringRadius, false, info.openStringLineWidth);
@@ -200,10 +193,6 @@ export default class ChordComponent extends React.Component {
                 }
             }
         }
-    }
-
-    toString() {
-        return 'ChordComponent';
     }
 
     drawFretGrid(info) {
@@ -267,12 +256,6 @@ export default class ChordComponent extends React.Component {
         this.drawPositions(info);
         this.drawFingerings(info);
         this.drawBars(info);
-    }
-
-    getDiagram(scale, renderer) {
-        this.renderer = this.renderers.canvas; //Could potentially put in different renderers here, SVG, url etc.
-        this.draw(scale);
-        // return this.renderer.diagram();
     }
 
     drawBars(info) {
@@ -363,12 +346,6 @@ export default class ChordComponent extends React.Component {
 
     componentDidMount() {
         this.renderChord();
-        // this.updateCanvas();
-    }
-
-    updateCanvas() {
-        const ctx = this.refs.canvas.getContext('2d');
-        ctx.fillRect(0, 0, 100, 100);
     }
 
 ﻿    render() {
