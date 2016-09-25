@@ -1,6 +1,5 @@
 import React from "react";
-import Highlight from "./components/Highlight";
-import Chord from "./components/Chord";
+import Highlight from "./Highlight";
 
 export default class Chordify extends React.Component {
 
@@ -14,7 +13,7 @@ export default class Chordify extends React.Component {
     }
 
     componentDidMount() {
-
+        // for test
     }
 
     removeBraces = chord => chord.replace(/\[(.+)]/, "$1");
@@ -25,38 +24,6 @@ export default class Chordify extends React.Component {
             chord => `<span style=color:${this.color}>${this.removeBraces(chord)}</span>`);
 
         return <Highlight text={wrapped}/>;
-    };
-
-    all = () => {
-        const matches = this.input.match(this.regex);
-
-        if (!matches) {
-            return [];
-        }
-
-        const matchesNormal = matches.map(match => this.removeBraces(match));
-
-        return matchesNormal.sort((a, b) => {
-            a = a.toLowerCase();
-            b = b.toLowerCase();
-            return a > b ? 1 : a < b ? -1 : 0;
-        });
-    };
-
-    unique = () => {
-        return this.all().filter((chord, index, arr) => arr.indexOf(chord) === index);
-    };
-
-    renderUniqueChords(diagramSupplier) {
-        var unique = this.unique();
-
-        const nodes = unique.map(chord => {
-            return <Chord key={chord} name={chord} diagram={diagramSupplier(chord)} />;
-        });
-
-        return (
-            <div>{nodes}</div>
-        )
     };
 
     renderInput() {

@@ -1,5 +1,5 @@
 ﻿// Based on chord.js v1.0.0 | MIT | Einar Egilsson 2015 | http://einaregilsson.com
-// created as React class by Kyrylo Zapylaiev <zak@robotnec.com>
+// re-implemented as React component by Kyrylo Zapylaiev <zak@robotnec.com>
 
 import * as React from "react";
 
@@ -23,16 +23,7 @@ export default class Chord extends React.Component {
 
     constructor(props) {
         super(props);
-        this.defaultSize = 3;
-        this.renderOnLoad = true;
         this.MUTED = -1;
-
-
-        //               |pos < 10   |pos > 10, needs seperator                | Optional fingerings|Optional size
-        this.regex = /^([0-9xX]{4,6}|(?:x|X|\d\d?)(?:[-\. ](?:x|X|\d\d?)){3,5})(?:\s*\[([T\d]+)\])?(?:\s*(\d+))?/g;
-
-        //                      |Chord name                 |pos < 10   |pos > 10, needs seperator                       | Optional fingerings|Optional size
-        this.searchRegex = /\b([ABCDEFG](?:[a-z0-9#])*)\s*\(?([0-9xX]{4,6}|(?:x|X|\d\d?)(?:[-\. ](?:x|X|\d\d?)){3,5})\)?(?:\s*\[([T\d]+)\])?(?:\s*(\d+))?/g;
 
         this.renderers = {};
         this.renderers.canvas = {
@@ -350,7 +341,7 @@ export default class Chord extends React.Component {
 
 ﻿    render() {
         return (
-            <canvas ref="canvas" width={300} height={300}/>
-        );
+            <canvas ref="canvas"/>
+        )
     }
 }
