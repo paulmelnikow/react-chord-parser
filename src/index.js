@@ -1,12 +1,13 @@
 import React from "react";
-import RaphaelChord from "../etc/raphael.chord";
+import Highlight from "./components/Highlight";
+import ChordJs from "./chordjs/chord";
 
 export default class Chordify extends React.Component {
 
     constructor(props) {
         super(props);
 
-        this.regex = /\[(\b[A-G](?:(?:add|dim|aug|maj|mM|mMaj|sus|m|b|#|\d)?(?:\/[A-G0-9])?)*(?!\||—|-|\.|:)(?:\b|#)+)]/;
+        this.regex = /\[(\b[A-G](?:(?:add|dim|aug|maj|mM|mMaj|sus|m|b|#|\d)?(?:\/[A-G0-9])?)*(?!\||—|-|\.|:)(?:\b|#)+)]/g;
         this.input = props.input;
     }
 
@@ -15,7 +16,8 @@ export default class Chordify extends React.Component {
     }
 
     wrap = () => {
-        return this.input.replace(this.regex, chord => <a>{this.removeBraces(chord)}</a>);
+        var wrapped = this.input.replace(this.regex, chord => "<a>" + this.removeBraces(chord) + "</a>");
+        return <Highlight text={wrapped}/>;
     };
 
     all = () => {
@@ -43,7 +45,8 @@ export default class Chordify extends React.Component {
 
         unique.forEach(chord => {
             const className = "id" + chord;
-            RaphaelChord.chord(className, chord);
+            const chordjs = ChordJs(null, null, null, null);
+            // ChordJs.chord(className, chord);
             return <div className={className}></div>
         });
     };

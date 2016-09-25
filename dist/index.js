@@ -1,16 +1,16 @@
 (function (global, factory) {
     if (typeof define === "function" && define.amd) {
-        define(["exports", "react", "../etc/raphael.chord"], factory);
+        define(["exports", "react", "./components/Highlight", "./chordjs/chord"], factory);
     } else if (typeof exports !== "undefined") {
-        factory(exports, require("react"), require("../etc/raphael.chord"));
+        factory(exports, require("react"), require("./components/Highlight"), require("./chordjs/chord"));
     } else {
         var mod = {
             exports: {}
         };
-        factory(mod.exports, global.react, global.raphael);
+        factory(mod.exports, global.react, global.Highlight, global.chord);
         global.index = mod.exports;
     }
-})(this, function (exports, _react, _raphael) {
+})(this, function (exports, _react, _Highlight, _chord) {
     "use strict";
 
     Object.defineProperty(exports, "__esModule", {
@@ -19,7 +19,9 @@
 
     var _react2 = _interopRequireDefault(_react);
 
-    var _raphael2 = _interopRequireDefault(_raphael);
+    var _Highlight2 = _interopRequireDefault(_Highlight);
+
+    var _chord2 = _interopRequireDefault(_chord);
 
     function _interopRequireDefault(obj) {
         return obj && obj.__esModule ? obj : {
@@ -84,13 +86,10 @@
             var _this = _possibleConstructorReturn(this, (Chordify.__proto__ || Object.getPrototypeOf(Chordify)).call(this, props));
 
             _this.wrap = function () {
-                return _this.input.replace(_this.regex, function (chord) {
-                    return _react2.default.createElement(
-                        "a",
-                        null,
-                        _this.removeBraces(chord)
-                    );
+                var wrapped = _this.input.replace(_this.regex, function (chord) {
+                    return "<a>" + _this.removeBraces(chord) + "</a>";
                 });
+                return _react2.default.createElement(_Highlight2.default, { text: wrapped });
             };
 
             _this.all = function () {
@@ -121,7 +120,7 @@
                 return chord.replace(/\[(.+)]/, "$1");
             };
 
-            _this.regex = /\[(\b[A-G](?:(?:add|dim|aug|maj|mM|mMaj|sus|m|b|#|\d)?(?:\/[A-G0-9])?)*(?!\||—|-|\.|:)(?:\b|#)+)]/;
+            _this.regex = /\[(\b[A-G](?:(?:add|dim|aug|maj|mM|mMaj|sus|m|b|#|\d)?(?:\/[A-G0-9])?)*(?!\||—|-|\.|:)(?:\b|#)+)]/g;
             _this.input = props.input;
             return _this;
         }
@@ -136,7 +135,8 @@
 
                 unique.forEach(function (chord) {
                     var className = "id" + chord;
-                    _raphael2.default.chord(className, chord);
+                    var chordjs = (0, _chord2.default)(null, null, null, null);
+                    // ChordJs.chord(className, chord);
                     return _react2.default.createElement("div", { className: className });
                 });
             }
