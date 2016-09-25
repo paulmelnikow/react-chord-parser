@@ -1,7 +1,8 @@
 # react-chord-parser
 
 React component and utility for parsing and rendering guitar/ukulele chords.
-Version <2.0.0 is deprecated!
+</br>
+Version <0.2.0 is deprecated.
 
 ---
 
