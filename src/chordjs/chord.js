@@ -1,32 +1,121 @@
-﻿﻿
-export default function Chord(canvas, name, positions, fingering) {
-    this.init(canvas, name, positions, fingering);
-}
+﻿// Based on chord.js v1.0.0 | MIT | Einar Egilsson 2015 | http://einaregilsson.com
+// created as React class by Kyrylo Zapylaiev <zak@robotnec.com>
 
-// chord.js v1.0.0 | MIT | Einar Egilsson 2015 | http://einaregilsson.com
+import * as React from "react";
 
-//Defaults
+const sizes = {
+    cellWidth: [4, 6, 8, 10, 12, 14, 16, 18, 20, 22],
+    nutSize: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+    lineWidth: [1, 1, 1, 1, 1, 1, 2, 2, 2, 2],
+    barWidth: [2.5, 3, 5, 7, 7, 9, 10, 10, 12, 12],
+    dotRadius: [2, 2.8, 3.7, 4.5, 5.3, 6.5, 7, 8, 9, 10],
+    openStringRadius: [1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6.5],
+    openStringLineWidth: [1, 1.2, 1.2, 1.4, 1.4, 1.4, 1.6, 2, 2, 2],
+    muteStringRadius: [2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6, 6.5],
+    muteStringLineWidth: [1.05, 1.1, 1.1, 1.2, 1.5, 1.5, 1.5, 2, 2.4, 2.5],
+    nameFontSize: [10, 14, 18, 22, 26, 32, 36, 40, 44, 48],
+    nameFontPaddingBottom: [4, 4, 5, 4, 4, 4, 5, 5, 5, 5],
+    fingerFontSize: [7, 8, 9, 11, 13, 14, 15, 18, 20, 22],
+    fretFontSize: [6, 8, 10, 12, 14, 14, 16, 17, 18, 19]
+};
 
-Chord.defaultSize = 3;
-Chord.renderOnLoad = true;
-Chord.MUTED = -1;
+export default class ChordComponent extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.defaultSize = 3;
+        this.renderOnLoad = true;
+        this.MUTED = -1;
 
 
-//               |pos < 10   |pos > 10, needs seperator                | Optional fingerings|Optional size
-Chord.regex = /^([0-9xX]{4,6}|(?:x|X|\d\d?)(?:[-\. ](?:x|X|\d\d?)){3,5})(?:\s*\[([T\d]+)\])?(?:\s*(\d+))?/g;
+        //               |pos < 10   |pos > 10, needs seperator                | Optional fingerings|Optional size
+        this.regex = /^([0-9xX]{4,6}|(?:x|X|\d\d?)(?:[-\. ](?:x|X|\d\d?)){3,5})(?:\s*\[([T\d]+)\])?(?:\s*(\d+))?/g;
 
-//                      |Chord name                 |pos < 10   |pos > 10, needs seperator                       | Optional fingerings|Optional size
-Chord.searchRegex = /\b([ABCDEFG](?:[a-z0-9#])*)\s*\(?([0-9xX]{4,6}|(?:x|X|\d\d?)(?:[-\. ](?:x|X|\d\d?)){3,5})\)?(?:\s*\[([T\d]+)\])?(?:\s*(\d+))?/g;
+        //                      |Chord name                 |pos < 10   |pos > 10, needs seperator                       | Optional fingerings|Optional size
+        this.searchRegex = /\b([ABCDEFG](?:[a-z0-9#])*)\s*\(?([0-9xX]{4,6}|(?:x|X|\d\d?)(?:[-\. ](?:x|X|\d\d?)){3,5})\)?(?:\s*\[([T\d]+)\])?(?:\s*(\d+))?/g;
 
-Chord.prototype = {
-    init: function (name, positions, fingers) {
+        this.renderers = {};
+        this.renderers.canvas = {
+            init: function (info, canvas) {
+                var ctx = this.ctx = canvas;
+                canvas.width = info.width;
+                canvas.height = info.height;
+
+                if (info.lineWidth % 2 == 1) {
+                    ctx.translate(0.5, 0.5);
+                }
+                ctx.fillStyle = 'white';
+                ctx.fillRect(-1, -1, canvas.width + 2, canvas.height + 2);
+                ctx.fillStyle = 'black';
+
+                ctx.lineJoin = 'miter';
+                ctx.lineWidth = info.lineWidth;
+                ctx.lineCap = 'square';
+                ctx.strokeStyle = 'black';
+            },
+
+            line: function (x1, y1, x2, y2, width, cap) {
+                var c = this.ctx;
+                c.save();
+                if (width) {
+                    c.lineWidth = width;
+                }
+                c.lineCap = cap || 'square';
+                c.beginPath();
+                c.moveTo(x1, y1);
+                c.lineTo(x2, y2);
+                c.stroke();
+                //console.log('x1 ' + x1 + ', x2 ' + x2 + ' y1 ' + y1 + ' y2 ' + y2 + ' width: ' +width);
+                c.restore();
+            },
+
+            text: function (x, y, text, font, size, baseline, align) {
+                this.ctx.font = size + 'px ' + font;
+                this.ctx.textBaseline = baseline;
+                this.ctx.textAlign = align;
+                this.ctx.fillText(text, x, y)
+            },
+
+            rect: function (x, y, width, height, lineWidth) {
+                this.ctx.fillRect(x - lineWidth / 2.0, y - lineWidth / 2.0, width + lineWidth, height + lineWidth);
+            },
+
+            circle: function (x, y, radius, fillCircle, lineWidth) {
+                var c = this.ctx;
+                c.beginPath();
+                c.arc(x, y, radius, 2 * Math.PI, false)
+                if (fillCircle) {
+                    c.fill();
+                } else {
+                    c.lineWidth = lineWidth;
+                    c.stroke();
+                }
+            },
+
+            diagram: function () {
+                var img = document.createElement('img');
+                img.src = this.canvas.toDataURL();
+                return img;
+            }
+        };
+
+        this.renderChord = function () {
+
+            const chordName = this.props.name;
+
+            this.initDraw(chordName, "[0, 0, 1, 1, 1]", "");
+            this.getDiagram(5);
+        };
+    }
+
+    initDraw(name, positions, fingers) {
         this.parse(positions, fingers);
         this.name = name;
         this.rawPositions = positions;
         this.rawFingers = fingers || '';
-    },
+    }
 
-    parse: function (frets, fingers) {
+    parse(frets, fingers) {
         this.positions = [];
         var raw = [];
         if (frets.match(/^[0-9xX]{1,6}$/)) {
@@ -48,7 +137,7 @@ Chord.prototype = {
         for (var i in raw) {
             var c = raw[i];
             if (c.toLowerCase() == 'x') {
-                this.positions.push(Chord.MUTED);
+                this.positions.push(ChordComponent.MUTED);
             } else {
                 var fret = parseInt(c);
                 if (fret > 0 && fret < minFret) {
@@ -79,9 +168,9 @@ Chord.prototype = {
                 }
             }
         }
-    },
+    }
 
-    drawMutedAndOpenStrings: function (info) {
+    drawMutedAndOpenStrings(info) {
         var r = this.renderer;
         for (var i in this.positions) {
             var pos = this.positions[i];
@@ -90,15 +179,15 @@ Chord.prototype = {
             if (this.startFret > 1) {
                 y += info.nutSize;
             }
-            if (pos == Chord.MUTED) {
+            if (pos == ChordComponent.MUTED) {
                 this.drawCross(info, x, y, info.muteStringRadius, info.muteStringLineWidth);
             } else if (pos == 0) {
                 r.circle(x, y, info.openStringRadius, false, info.openStringLineWidth);
             }
         }
-    },
+    }
 
-    drawPositions: function (info) {
+    drawPositions(info) {
         var r = this.renderer;
         for (var i in this.positions) {
             var pos = this.positions[i];
@@ -111,13 +200,13 @@ Chord.prototype = {
                 }
             }
         }
-    },
+    }
 
-    toString: function () {
-        return 'Chord';
-    },
+    toString() {
+        return 'ChordComponent';
+    }
 
-    drawFretGrid: function (info) {
+    drawFretGrid(info) {
         var r = this.renderer;
         var width = (this.stringCount - 1) * info.cellWidth;
         for (var i = 0; i <= this.stringCount - 1; i++) {
@@ -129,44 +218,27 @@ Chord.prototype = {
             var y = info.boxStartY + i * info.cellHeight;
             r.line(info.boxStartX, y, info.boxStartX + width, y, info.lineWidth, 'square');
         }
-    },
+    }
 
-    drawNut: function (info) {
+    drawNut(info) {
         var r = this.renderer;
         if (this.startFret == 1) {
             r.rect(info.boxStartX, info.boxStartY - info.nutSize, info.boxWidth, info.nutSize, info.lineWidth);
         } else {
             r.text(info.boxStartX - info.dotRadius, info.boxStartY + info.cellHeight / 2.0, this.startFret + '', info.font, info.fretFontSize, 'middle', 'right');
         }
-    },
+    }
 
-    drawName: function (info) {
+    drawName(info) {
         var r = this.renderer;
         r.text(info.width / 2.0, info.nameFontSize + info.lineWidth * 3, this.name, info.font, info.nameFontSize, 'bottom', 'center');
-    },
+    }
 
-    //It's better to specify this explicitly. Trying to scale in a nice way to doesn't works so well.
-    sizes: {
-        cellWidth: [4, 6, 8, 10, 12, 14, 16, 18, 20, 22],
-        nutSize: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
-        lineWidth: [1, 1, 1, 1, 1, 1, 2, 2, 2, 2],
-        barWidth: [2.5, 3, 5, 7, 7, 9, 10, 10, 12, 12],
-        dotRadius: [2, 2.8, 3.7, 4.5, 5.3, 6.5, 7, 8, 9, 10],
-        openStringRadius: [1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6.5],
-        openStringLineWidth: [1, 1.2, 1.2, 1.4, 1.4, 1.4, 1.6, 2, 2, 2],
-        muteStringRadius: [2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6, 6.5],
-        muteStringLineWidth: [1.05, 1.1, 1.1, 1.2, 1.5, 1.5, 1.5, 2, 2.4, 2.5],
-        nameFontSize: [10, 14, 18, 22, 26, 32, 36, 40, 44, 48],
-        nameFontPaddingBottom: [4, 4, 5, 4, 4, 4, 5, 5, 5, 5],
-        fingerFontSize: [7, 8, 9, 11, 13, 14, 15, 18, 20, 22],
-        fretFontSize: [6, 8, 10, 12, 14, 14, 16, 17, 18, 19]
-    },
-
-    calculateDimensions: function (scale) {
+    calculateDimensions(scale) {
         var info = {};
         scale--;
-        for (var name in this.sizes) {
-            info[name] = this.sizes[name][scale];
+        for (var name in sizes) {
+            info[name] = sizes[name][scale];
         }
 
         info.scale = scale;
@@ -183,11 +255,11 @@ Chord.prototype = {
         info.boxStartX = Math.round(((info.width - info.boxWidth) / 2));
         info.boxStartY = Math.round(info.nameFontSize + info.nameFontPaddingBottom + info.nutSize + info.dotWidth);
         return info;
-    },
+    }
 
-    draw: function (scale) {
+    draw(scale) {
         var info = this.calculateDimensions(scale);
-        this.renderer.init(info);
+        this.renderer.init(info, this.refs.canvas.getContext('2d'));
         this.drawFretGrid(info);
         this.drawNut(info);
         this.drawName(info);
@@ -195,15 +267,15 @@ Chord.prototype = {
         this.drawPositions(info);
         this.drawFingerings(info);
         this.drawBars(info);
-    },
+    }
 
-    getDiagram: function (scale, renderer) {
-        this.renderer = Chord.renderers.canvas; //Could potentially put in different renderers here, SVG, url etc.
+    getDiagram(scale, renderer) {
+        this.renderer = this.renderers.canvas; //Could potentially put in different renderers here, SVG, url etc.
         this.draw(scale);
-        return this.renderer.diagram();
-    },
+        // return this.renderer.diagram();
+    }
 
-    drawBars: function (info) {
+    drawBars(info) {
         var r = this.renderer;
         if (this.fingerings.length > 0) {
             var bars = {};
@@ -258,11 +330,11 @@ Chord.prototype = {
                 r.line(xStart, y, xEnd, y, info.dotRadius, 'square');
             }
         }
-    },
+    }
 
-    drawCross: function (info, x, y, radius, lineWidth) {
+    drawCross(info, x, y, radius, lineWidth) {
         var r = this.renderer;
-        var angle = Math.PI / 4
+        var angle = Math.PI / 4;
         for (var i = 0; i < 2; i++) {
             var startAngle = angle + i * Math.PI / 2;
             var endAngle = startAngle + Math.PI;
@@ -274,13 +346,13 @@ Chord.prototype = {
 
             r.line(startX, startY, endX, endY, lineWidth, 'round');
         }
-    },
+    }
 
-    drawFingerings: function (info) {
+    drawFingerings(info) {
         var r = this.renderer;
         var fontSize = info.fingerFontSize;
         for (var i in this.fingerings) {
-            var finger = this.fingerings[i]
+            var finger = this.fingerings[i];
             var x = info.boxStartX + i * info.cellWidth;
             var y = info.boxStartY + info.boxHeight + fontSize + info.lineWidth + 1;
             if (finger) {
@@ -288,112 +360,20 @@ Chord.prototype = {
             }
         }
     }
+
+    componentDidMount() {
+        this.renderChord();
+        // this.updateCanvas();
+    }
+
+    updateCanvas() {
+        const ctx = this.refs.canvas.getContext('2d');
+        ctx.fillRect(0, 0, 100, 100);
+    }
+
+﻿    render() {
+        return (
+            <canvas ref="canvas" width={300} height={300}/>
+        );
+    }
 }
-
-
-Chord.renderers = {};
-
-Chord.renderers.canvas = {
-
-    init: function (info) {
-        this.canvas = document.createElement('canvas');
-        var ctx = this.ctx = this.canvas.getContext('2d');
-        this.canvas.width = info.width;
-        this.canvas.height = info.height;
-
-        if (info.lineWidth % 2 == 1) {
-            ctx.translate(0.5, 0.5);
-        }
-        ctx.fillStyle = 'white';
-        ctx.fillRect(-1, -1, this.canvas.width + 2, this.canvas.height + 2);
-        ctx.fillStyle = 'black';
-
-        ctx.lineJoin = 'miter';
-        ctx.lineWidth = info.lineWidth;
-        ctx.lineCap = 'square';
-        ctx.strokeStyle = 'black';
-    },
-
-    line: function (x1, y1, x2, y2, width, cap) {
-        var c = this.ctx;
-        c.save();
-        if (width) {
-            c.lineWidth = width;
-        }
-        c.lineCap = cap || 'square';
-        c.beginPath();
-        c.moveTo(x1, y1);
-        c.lineTo(x2, y2);
-        c.stroke();
-        //console.log('x1 ' + x1 + ', x2 ' + x2 + ' y1 ' + y1 + ' y2 ' + y2 + ' width: ' +width);
-        c.restore();
-    },
-
-    text: function (x, y, text, font, size, baseline, align) {
-        this.ctx.font = size + 'px ' + font;
-        this.ctx.textBaseline = baseline;
-        this.ctx.textAlign = align;
-        this.ctx.fillText(text, x, y)
-    },
-
-    rect: function (x, y, width, height, lineWidth) {
-        this.ctx.fillRect(x - lineWidth / 2.0, y - lineWidth / 2.0, width + lineWidth, height + lineWidth);
-    },
-
-    circle: function (x, y, radius, fillCircle, lineWidth) {
-        var c = this.ctx;
-        c.beginPath();
-        c.arc(x, y, radius, 2 * Math.PI, false)
-        if (fillCircle) {
-            c.fill();
-        } else {
-            c.lineWidth = lineWidth;
-            c.stroke();
-        }
-    },
-
-    diagram: function () {
-        var img = document.createElement('img');
-        img.src = this.canvas.toDataURL();
-        return img;
-    }
-};
-
-Chord.autoRender = function () {
-    if (!Chord.renderOnLoad) {
-        return;
-    }
-    Chord.render(document.querySelectorAll('[data-chord]'));
-};
-
-if (document.addEventListener) {
-    document.addEventListener('DOMContentLoaded', Chord.autoRender, true);
-} else if (window.attachEvent) {
-    window.attachEvent('onload', Chord.autoRender);
-}
-
-Chord.render = function (input) {
-
-    var array = [];
-
-    if (Object.prototype.toString.call(input) === '[object Array]') {
-        array = input;
-    } else {
-        array.push(input);
-    }
-
-    for (var i = 0; i < array.length; i++) {
-        var el = array[i];
-        var chordDef = el.getAttribute('data-chord');
-
-        var chordName = el.firstChild.nodeValue;
-        if (chordDef && chordDef.match(Chord.regex)) {
-            var size = Chord.defaultSize;
-            if (RegExp.$3) {
-                size = parseInt(RegExp.$3);
-            }
-
-            el.replaceChild(new Chord(chordName, RegExp.$1, RegExp.$2).getDiagram(size), el.firstChild);
-        }
-    }
-};

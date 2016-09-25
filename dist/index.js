@@ -90,9 +90,11 @@
             };
 
             _this.wrap = function () {
+
                 var wrapped = _this.input.replace(_this.regex, function (chord) {
-                    return "<a>" + _this.removeBraces(chord) + "</a>";
+                    return "<span style=color:" + _this.color + ">" + _this.removeBraces(chord) + "</span>";
                 });
+
                 return _react2.default.createElement(_Highlight2.default, { text: wrapped });
             };
 
@@ -122,7 +124,8 @@
 
             _this.regex = /\[(\b[A-G](?:(?:add|dim|aug|maj|mM|mMaj|sus|m|b|#|\d)?(?:\/[A-G0-9])?)*(?!\||—|-|\.|:)(?:\b|#)+)]/g;
             _this.input = props.input;
-            _this.renderUniqueChords = props.renderUniqueChords || false;
+            _this.color = props.color || "#2e6da4";
+            _this.showUniqueChordsOnly = props.showUniqueChordsOnly || false;
             return _this;
         }
 
@@ -135,10 +138,7 @@
                 var unique = this.unique();
 
                 var nodes = unique.map(function (chord) {
-                    var className = "id" + chord;
-                    // const chordjs = ChordJs(null, null, null, null);
-                    // ChordJs.chord(className, chord);
-                    return _react2.default.createElement("div", { className: className });
+                    return _react2.default.createElement(_chord2.default, { id: chord, name: chord });
                 });
 
                 return _react2.default.createElement(
@@ -159,7 +159,7 @@
         }, {
             key: "render",
             value: function render() {
-                if (this.renderUniqueChords) {
+                if (this.showUniqueChordsOnly) {
                     return this.renderUniqueChords();
                 } else {
                     return this.renderInput();

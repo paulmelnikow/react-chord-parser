@@ -1,6 +1,6 @@
 import React from "react";
 import Highlight from "./components/Highlight";
-import ChordJs from "./chordjs/chord";
+import Chord from "./chordjs/chord";
 
 export default class Chordify extends React.Component {
 
@@ -51,10 +51,7 @@ export default class Chordify extends React.Component {
         var unique = this.unique();
 
         const nodes = unique.map(chord => {
-            const className = `id-${chord}`;
-            // const chordjs = ChordJs(null, null, null, null);
-            // ChordJs.chord(className, chord);
-            return <div className={className}>{chord}</div>
+            return <Chord id={chord} name={chord} />;
         });
 
         return (

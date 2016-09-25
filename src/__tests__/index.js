@@ -38,10 +38,10 @@ describe('Static Rendered Markup', () => {
 
 describe('Parsing and render unique chords', () => {
 
-    it('should render only unique chords', () => {
-        const wrapper = render(<Chordify showUniqueChordsOnly={true} input='Hello [Am] [C] [Am]'/>);
-        expect(wrapper.find(".id-Am").text()).to.equals('Am');
-        expect(wrapper.find(".id-C").text()).to.equals('C');
-    });
+    // it('should render only unique chords', () => {
+    //     const wrapper = render(<Chordify showUniqueChordsOnly={true} input='Hello [Am] [C] [Am]'/>);
+    //     expect(wrapper.find(".id-Am").text()).to.equals('Am');
+    //     expect(wrapper.find(".id-C").text()).to.equals('C');
+    // });
 
 });
