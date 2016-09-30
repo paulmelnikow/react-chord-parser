@@ -440,6 +440,12 @@
                 this.renderChord();
             }
         }, {
+            key: 'componentWillReceiveProps',
+            value: function componentWillReceiveProps(props) {
+                this.props = props;
+                this.renderChord();
+            }
+        }, {
             key: 'render',
             value: function render() {
                 return React.createElement('canvas', { ref: 'canvas' });

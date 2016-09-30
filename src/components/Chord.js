@@ -339,6 +339,11 @@ export default class Chord extends React.Component {
         this.renderChord();
     }
 
+    componentWillReceiveProps(props) {
+        this.props = props;
+        this.renderChord();
+    }
+
 ﻿    render() {
         return (
             <canvas ref="canvas"/>
