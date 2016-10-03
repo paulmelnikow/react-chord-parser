@@ -1,6 +1,6 @@
 {
     "name": "react-chord-parser",
-    "version": "0.2.2",
+    "version": "0.2.3",
     "description": "React component and utility for parsing and rendering guitar/ukulele chords",
     "author": "Kyrylo Zapylaiev <zak@robotnec.com",
     "contributors": [

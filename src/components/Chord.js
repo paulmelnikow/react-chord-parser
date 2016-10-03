@@ -351,7 +351,9 @@ export default class Chord extends React.Component {
 
 ﻿    render() {
         return (
-            <canvas ref="canvas"/>
+            <div style={this.props.style}>
+                <canvas ref="canvas"/>
+            </div>
         )
     }
 }

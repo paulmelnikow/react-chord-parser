@@ -453,7 +453,11 @@
         }, {
             key: 'render',
             value: function render() {
-                return React.createElement('canvas', { ref: 'canvas' });
+                return React.createElement(
+                    'div',
+                    { style: this.props.style },
+                    React.createElement('canvas', { ref: 'canvas' })
+                );
             }
         }]);
 
