@@ -32,9 +32,12 @@ export default class Chord extends React.Component {
                 canvas.width = info.width;
                 canvas.height = info.height;
 
-                if (info.lineWidth % 2 == 1) {
+                if (!this.inited && info.lineWidth % 2 == 1) {
                     ctx.translate(0.5, 0.5);
                 }
+
+                this.inited = true;
+
                 ctx.fillStyle = 'white';
                 ctx.fillRect(-1, -1, canvas.width + 2, canvas.height + 2);
                 ctx.fillStyle = 'black';
@@ -238,7 +241,7 @@ export default class Chord extends React.Component {
     }
 
     draw(scale) {
-        var info = this.calculateDimensions(scale);
+        const info = this.calculateDimensions(scale);
         this.renderer.init(info, this.refs.canvas.getContext('2d'));
         this.drawFretGrid(info);
         this.drawNut(info);
@@ -339,9 +342,11 @@ export default class Chord extends React.Component {
         this.renderChord();
     }
 
-    componentWillReceiveProps(props) {
-        this.props = props;
-        this.renderChord();
+    componentWillReceiveProps(nextProps) {
+        if (this.props.name !== nextProps.name || this.props.diagram !== nextProps.diagram) {
+            this.props = nextProps;
+            this.renderChord();
+        }
     }
 
 ﻿    render() {

@@ -117,9 +117,12 @@
                     canvas.width = info.width;
                     canvas.height = info.height;
 
-                    if (info.lineWidth % 2 == 1) {
+                    if (!this.inited && info.lineWidth % 2 == 1) {
                         ctx.translate(0.5, 0.5);
                     }
+
+                    this.inited = true;
+
                     ctx.fillStyle = 'white';
                     ctx.fillRect(-1, -1, canvas.width + 2, canvas.height + 2);
                     ctx.fillStyle = 'black';
@@ -441,9 +444,11 @@
             }
         }, {
             key: 'componentWillReceiveProps',
-            value: function componentWillReceiveProps(props) {
-                this.props = props;
-                this.renderChord();
+            value: function componentWillReceiveProps(nextProps) {
+                if (this.props.name !== nextProps.name || this.props.diagram !== nextProps.diagram) {
+                    this.props = nextProps;
+                    this.renderChord();
+                }
             }
         }, {
             key: 'render',
