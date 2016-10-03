@@ -1,16 +1,16 @@
 (function (global, factory) {
     if (typeof define === "function" && define.amd) {
-        define(["exports", "react", "./Highlight", "./Parser"], factory);
+        define(["exports", "react", "./Highlight", "./Parser", "dompurify"], factory);
     } else if (typeof exports !== "undefined") {
-        factory(exports, require("react"), require("./Highlight"), require("./Parser"));
+        factory(exports, require("react"), require("./Highlight"), require("./Parser"), require("dompurify"));
     } else {
         var mod = {
             exports: {}
         };
-        factory(mod.exports, global.react, global.Highlight, global.Parser);
+        factory(mod.exports, global.react, global.Highlight, global.Parser, global.dompurify);
         global.Chordify = mod.exports;
     }
-})(this, function (exports, _react, _Highlight, _Parser) {
+})(this, function (exports, _react, _Highlight, _Parser, _dompurify) {
     "use strict";
 
     Object.defineProperty(exports, "__esModule", {
@@ -22,6 +22,8 @@
     var _Highlight2 = _interopRequireDefault(_Highlight);
 
     var _Parser2 = _interopRequireDefault(_Parser);
+
+    var _dompurify2 = _interopRequireDefault(_dompurify);
 
     function _interopRequireDefault(obj) {
         return obj && obj.__esModule ? obj : {
@@ -85,7 +87,8 @@
 
             var _this = _possibleConstructorReturn(this, (Chordify.__proto__ || Object.getPrototypeOf(Chordify)).call(this, props));
 
-            _this.parser = new _Parser2.default(props.input, props.color);
+            _this.color = props.color || "#2e6da4";
+            _this.parser = new _Parser2.default(_dompurify2.default.sanitize(props.input, { ALLOWED_TAGS: [], KEEP_CONTENT: true }));
             return _this;
         }
 
@@ -97,7 +100,11 @@
         }, {
             key: "render",
             value: function render() {
-                return _react2.default.createElement(_Highlight2.default, { text: this.parser.wrap() });
+                var _this2 = this;
+
+                return _react2.default.createElement(_Highlight2.default, { text: this.parser.wrap(function (chord) {
+                        return "<span style=color:" + _this2.color + ">" + chord + "</span>";
+                    }) });
             }
         }]);
 

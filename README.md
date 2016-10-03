@@ -51,12 +51,18 @@ class MyComponent extends React.Component {
     
     // this will render all unique chords from the input as vector image
     renderUniqueChords() {
-        return uniques.map(chord => <Chord key={chord} name={chord} diagram={this.diagramSupplier(chord)}/>);
+        return uniques.map(chord => <Chord 
+                                        key={chord} 
+                                        name={chord} 
+                                        diagram={this.diagramSupplier(chord)}/>);
     }
     
     render() {
         return (
-            // Just emphasize chords found in the input with some color
+            // Just emphasize chords found in the input with some color.
+            // You can be sure that input text properly sanitized,
+            // actually no html tags are allowed, if any – they will be deleted.
+            // You can get more control using parser.wrap(callback) method
             <Chordify color="#aa4444" input={input}/>
         )
     }

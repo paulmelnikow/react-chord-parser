@@ -42,7 +42,7 @@
     }();
 
     var Parser = function () {
-        function Parser(input, color) {
+        function Parser(input) {
             _classCallCheck(this, Parser);
 
             this.removeBraces = function (chord) {
@@ -50,7 +50,6 @@
             };
 
             this.input = input;
-            this.color = color || "#2e6da4";
             this.regex = /\[(\b[A-G](?:(?:add|dim|aug|maj|mM|mMaj|sus|m|b|#|\d)?(?:\/[A-G0-9])?)*(?!\||—|-|\.|:)(?:\b|#)+)]/g;
         }
 
@@ -84,11 +83,11 @@
             }
         }, {
             key: "wrap",
-            value: function wrap() {
+            value: function wrap(callback) {
                 var _this2 = this;
 
                 return this.input.replace(this.regex, function (chord) {
-                    return "<span style=color:" + _this2.color + ">" + _this2.removeBraces(chord) + "</span>";
+                    return callback(_this2.removeBraces(chord));
                 });
             }
         }]);

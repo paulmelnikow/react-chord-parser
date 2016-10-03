@@ -75,6 +75,11 @@
         if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
     }
 
+    var config = {
+        ALLOWED_TAGS: ['span'],
+        KEEP_CONTENT: true
+    };
+
     var Highlight = function (_React$Component) {
         _inherits(Highlight, _React$Component);
 
@@ -88,7 +93,7 @@
             key: "highlightText",
             value: function highlightText(text) {
                 if (text) {
-                    text = _dompurify2.default.sanitize(text);
+                    text = _dompurify2.default.sanitize(text, config);
                     return _react2.default.createElement("div", { dangerouslySetInnerHTML: { __html: text } });
                 } else {
                     return _react2.default.createElement("div", null);

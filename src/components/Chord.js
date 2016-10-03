@@ -38,7 +38,7 @@ export default class Chord extends React.Component {
 
                 this.inited = true;
 
-                ctx.fillStyle = 'white';
+                ctx.fillStyle = 'transparent';
                 ctx.fillRect(-1, -1, canvas.width + 2, canvas.height + 2);
                 ctx.fillStyle = 'black';
 

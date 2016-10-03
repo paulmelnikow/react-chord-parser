@@ -1,8 +1,7 @@
 export default class Parser {
 
-    constructor(input, color) {
+    constructor(input) {
         this.input = input;
-        this.color = color || "#2e6da4";
         this.regex = /\[(\b[A-G](?:(?:add|dim|aug|maj|mM|mMaj|sus|m|b|#|\d)?(?:\/[A-G0-9])?)*(?!\||—|-|\.|:)(?:\b|#)+)]/g;
     }
 
@@ -28,8 +27,8 @@ export default class Parser {
         return this.all().filter((chord, index, arr) => arr.indexOf(chord) === index);
     }
 
-    wrap() {
+    wrap(callback) {
         return this.input.replace(this.regex,
-            chord => `<span style=color:${this.color}>${this.removeBraces(chord)}</span>`);
+            chord => callback(this.removeBraces(chord)));
     }
 }
