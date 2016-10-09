@@ -15,9 +15,15 @@ export default class Chordify extends React.Component {
         // for test
     }
 
+    wrapChords = () => {
+        let wrapped = this.parser.wrap(chord => `<span style=color:${this.color}>${chord}</span>`);
+        wrapped = wrapped.replace("\\", "");
+        return wrapped;
+    };
+
     render() {
         return (
-            <Highlight text={this.parser.wrap(chord => `<span style=color:${this.color}>${chord}</span>`)}/>
+            <Highlight text={this.wrapChords()}/>
         )
     }
 }

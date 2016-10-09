@@ -2,10 +2,8 @@ export default class Parser {
 
     constructor(input) {
         this.input = input;
-        this.regex = /\[(\b[A-G](?:(?:add|dim|aug|maj|mM|mMaj|sus|m|b|#|\d)?(?:\/[A-G0-9])?)*(?!\||—|-|\.|:)(?:\b|#)+)]/g;
+        this.regex = /(\b[A-G](?:(?:add|dim|aug|maj|mM|mMaj|sus|m|b|#|\d)?(?:\/[A-G0-9])?)*(?!\||—|-|\.|:)(?:\b|#)+)/g;
     }
-
-    removeBraces = chord => chord.replace(/\[(.+)]/, "$1");
 
     all() {
         const matches = this.input.match(this.regex);
@@ -14,9 +12,7 @@ export default class Parser {
             return [];
         }
 
-        const matchesNormal = matches.map(match => this.removeBraces(match));
-
-        return matchesNormal.sort((a, b) => {
+        return matches.sort((a, b) => {
             a = a.toLowerCase();
             b = b.toLowerCase();
             return a > b ? 1 : a < b ? -1 : 0;
@@ -28,7 +24,6 @@ export default class Parser {
     }
 
     wrap(callback) {
-        return this.input.replace(this.regex,
-            chord => callback(this.removeBraces(chord)));
+        return this.input.replace(this.regex, callback);
     }
 }

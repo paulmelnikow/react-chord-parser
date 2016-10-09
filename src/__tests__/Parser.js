@@ -16,14 +16,14 @@ describe('The parser: parsing', () => {
         expect(result).to.be.empty;
     });
 
-    it('should not match a chord if it is an article', () => {
-        const result = new ChordParser('A big bottle of wine').all();
+    it('should not match a chord if it is an article and escaped', () => {
+        const result = new ChordParser('\\A big bottle of wine').all();
         expect(result).to.be.empty;
     });
 
-    it('should not match a chord if it is not wrapped into []', () => {
-        const result = new ChordParser('C [D] Am [Cm]').all();
-        expect(result.join('')).to.equal('CmD');
+    it('should not parse chords', () => {
+        const result = new ChordParser('C Dsdfsdf Am sdfsdf').all();
+        expect(result.join('')).to.equal('AmC');
     });
 });
 
@@ -36,17 +36,17 @@ describe('The parser: the unique() method', function () {
     });
 
     it('should sort results alphabetically', () => {
-        const result = new ChordParser('[C] [B] [A]').unique();
+        const result = new ChordParser('C B A').unique();
         expect(result.join('')).to.equal('ABC');
     });
 
     it('should not contain duplicates', () => {
-        const result = new ChordParser('[A] [A] [B] [C] [A] [D] [E] [F] [E]').unique();
+        const result = new ChordParser('A A B C A D E F E').unique();
         expect(result.join('')).to.equal('ABCDEF');
     });
 
     it('should be case sensitive by default', () => {
-        const result = new ChordParser('[A] [a] [B] [b] [C] [c]').unique();
+        const result = new ChordParser('A a B b C c').unique();
         expect(result.join('')).to.equal('ABC');
     });
 });
