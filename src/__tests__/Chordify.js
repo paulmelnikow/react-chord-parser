@@ -26,4 +26,14 @@ describe('Chordify: Static Rendered Markup', () => {
         const wrapper = render(<Chordify input='Hello Am'/>);
         expect(wrapper.text()).to.equals('Hello Am');
     });
+
+    it('should delete escape symbol', () => {
+        const wrapper = render(<Chordify input='\A big bottle of wine'/>);
+        expect(wrapper.text()).to.equals('A big bottle of wine');
+    });
+
+    it('should not delete escape symbol on a lower case letter', () => {
+        const wrapper = render(<Chordify input='\A big \a bottle of wine'/>);
+        expect(wrapper.text()).to.equals('A big \\a bottle of wine');
+    });
 });

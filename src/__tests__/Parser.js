@@ -21,7 +21,7 @@ describe('The parser: parsing', () => {
         expect(result).to.be.empty;
     });
 
-    it('should not parse chords', () => {
+    it('should not parse chords if it\'s not chords', () => {
         const result = new ChordParser('C Dsdfsdf Am sdfsdf').all();
         expect(result.join('')).to.equal('AmC');
     });
@@ -48,5 +48,10 @@ describe('The parser: the unique() method', function () {
     it('should be case sensitive by default', () => {
         const result = new ChordParser('A a B b C c').unique();
         expect(result.join('')).to.equal('ABC');
+    });
+
+    it('should not parsed escaped', () => {
+        const result = new ChordParser('A Am C \\D \\Dm E').unique();
+        expect(result.join('')).to.equal('AAmCE');
     });
 });

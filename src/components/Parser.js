@@ -2,15 +2,17 @@ export default class Parser {
 
     constructor(input) {
         this.input = input;
-        this.regex = /(\b[A-G](?:(?:add|dim|aug|maj|mM|mMaj|sus|m|b|#|\d)?(?:\/[A-G0-9])?)*(?!\||—|-|\.|:)(?:\b|#)+)/g;
+        this.regex = /((\\)?\b[A-G](?:(?:add|dim|aug|maj|mM|mMaj|sus|m|b|#|\d)?(?:\/[A-G0-9])?)*(?!\||—|-|\.|:)(?:\b|#)+)/g;
     }
 
     all() {
-        const matches = this.input.match(this.regex);
+        let matches = this.input.match(this.regex);
 
         if (!matches) {
             return [];
         }
+
+        matches = matches.filter(match => !match.startsWith("\\"));
 
         return matches.sort((a, b) => {
             a = a.toLowerCase();
@@ -24,6 +26,12 @@ export default class Parser {
     }
 
     wrap(callback) {
-        return this.input.replace(this.regex, callback);
+        return this.input.replace(this.regex, match => {
+            if (match.startsWith("\\")) {
+                return match.replace("\\", "");
+            } else {
+                return callback(match);
+            }
+        });
     }
 }
