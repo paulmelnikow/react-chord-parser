@@ -87,6 +87,12 @@
 
             var _this = _possibleConstructorReturn(this, (Chordify.__proto__ || Object.getPrototypeOf(Chordify)).call(this, props));
 
+            _this.wrapChords = function () {
+                return _this.parser.wrap(function (chord) {
+                    return "<span style=color:" + _this.color + ">" + chord + "</span>";
+                });
+            };
+
             _this.color = props.color || "#2e6da4";
             _this.parser = new _Parser2.default(_dompurify2.default.sanitize(props.input, { ALLOWED_TAGS: [], KEEP_CONTENT: true }));
             return _this;
@@ -100,11 +106,7 @@
         }, {
             key: "render",
             value: function render() {
-                var _this2 = this;
-
-                return _react2.default.createElement(_Highlight2.default, { text: this.parser.wrap(function (chord) {
-                        return "<span style=color:" + _this2.color + ">" + chord + "</span>";
-                    }) });
+                return _react2.default.createElement(_Highlight2.default, { text: this.wrapChords() });
             }
         }]);
 

@@ -45,30 +45,24 @@
         function Parser(input) {
             _classCallCheck(this, Parser);
 
-            this.removeBraces = function (chord) {
-                return chord.replace(/\[(.+)]/, "$1");
-            };
-
             this.input = input;
-            this.regex = /\[(\b[A-G](?:(?:add|dim|aug|maj|mM|mMaj|sus|m|b|#|\d)?(?:\/[A-G0-9])?)*(?!\||—|-|\.|:)(?:\b|#)+)]/g;
+            this.regex = /((\\)?\b[A-G](?:(?:add|dim|aug|maj|mM|mMaj|sus|m|b|#|\d)?(?:\/[A-G0-9])?)*(?!\||—|-|\.|:)(?:\b|#)+)/g;
         }
 
         _createClass(Parser, [{
             key: "all",
             value: function all() {
-                var _this = this;
-
                 var matches = this.input.match(this.regex);
 
                 if (!matches) {
                     return [];
                 }
 
-                var matchesNormal = matches.map(function (match) {
-                    return _this.removeBraces(match);
+                matches = matches.filter(function (match) {
+                    return !match.startsWith("\\");
                 });
 
-                return matchesNormal.sort(function (a, b) {
+                return matches.sort(function (a, b) {
                     a = a.toLowerCase();
                     b = b.toLowerCase();
                     return a > b ? 1 : a < b ? -1 : 0;
@@ -84,10 +78,12 @@
         }, {
             key: "wrap",
             value: function wrap(callback) {
-                var _this2 = this;
-
-                return this.input.replace(this.regex, function (chord) {
-                    return callback(_this2.removeBraces(chord));
+                return this.input.replace(this.regex, function (match) {
+                    if (match.startsWith("\\")) {
+                        return match.replace("\\", "");
+                    } else {
+                        return callback(match);
+                    }
                 });
             }
         }]);
