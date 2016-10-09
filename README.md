@@ -14,23 +14,25 @@ npm install react-chord-parser --save
 
 ### Usage
 
-Note, that chords in input string must be in
-square brackets and starts with capital letter, e.g. `[Am7]`.
+Note, that chords in input string must starts with capital letter, e.g. `Am7`.
 
 ```js
 import {Parser, Chord, Chordify} from "react-chord-parser";
 
-const input = '[G]                [D]               \
+const input = 'G                D                   \
              When I find myself in times of trouble,\
-               [Em]       [C]                       \
+               Em       C                           \
              Mother Mary comes to me,               \
-               [G]              [D]       [C]    [G]\
+               G              D       C          G  \
              Speaking words of wisdom, let it be.';
 
 const parser = new Parser(input);
 
 // Return an array of unique chords found in the string
 const uniques = parser.unique(); // => ["C", "D", "Em", "G"];
+
+// If you want to exclude word from parsing 
+// just precede it with "\" character, e.g. "What \A Day"
 
 class MyComponent extends React.Component {
 
