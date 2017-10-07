@@ -12,13 +12,7 @@ export default class Parser {
             return [];
         }
 
-        matches = matches.filter(match => !match.startsWith("\\"));
-
-        return matches.sort((a, b) => {
-            a = a.toLowerCase();
-            b = b.toLowerCase();
-            return a > b ? 1 : a < b ? -1 : 0;
-        });
+        return matches.filter(match => !match.startsWith("\\"));
     }
 
     unique() {
