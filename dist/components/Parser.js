@@ -58,14 +58,8 @@
                     return [];
                 }
 
-                matches = matches.filter(function (match) {
+                return matches.filter(function (match) {
                     return !match.startsWith("\\");
-                });
-
-                return matches.sort(function (a, b) {
-                    a = a.toLowerCase();
-                    b = b.toLowerCase();
-                    return a > b ? 1 : a < b ? -1 : 0;
                 });
             }
         }, {
